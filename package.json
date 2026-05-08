@@ -1,0 +1,46 @@
+{
+  "name": "app",
+  "version": "1.0.0",
+  "description": "",
+  "main": "index.js",
+  "scripts": {
+    "test": "vitest run",
+    "build": "vite build && cp src/module.json dist/ && cp -r src/templates dist/",
+    "dev": "vite build --watch"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/MagdielCAS/mag-obsidian-module.git"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "type": "commonjs",
+  "bugs": {
+    "url": "https://github.com/MagdielCAS/mag-obsidian-module/issues"
+  },
+  "homepage": "https://github.com/MagdielCAS/mag-obsidian-module#readme",
+  "devDependencies": {
+    "@league-of-foundry-developers/foundry-vtt-types": "^13.346.0-beta.20250812191140",
+    "@tailwindcss/postcss": "^4.2.4",
+    "@tailwindcss/vite": "^4.2.4",
+    "@types/js-yaml": "^4.0.9",
+    "@types/node": "^25.6.2",
+    "@types/turndown": "^5.0.6",
+    "@vitest/ui": "^4.1.5",
+    "autoprefixer": "^10.5.0",
+    "jsdom": "^29.1.1",
+    "jszip": "^3.10.1",
+    "postcss": "^8.5.14",
+    "tailwindcss": "^4.2.4",
+    "typescript": "^6.0.3",
+    "vite": "^8.0.11",
+    "vitest": "^4.1.5"
+  },
+  "dependencies": {
+    "html-to-md": "^0.8.8",
+    "js-yaml": "^4.1.1",
+    "turndown": "^7.2.4",
+    "turndown-plugin-gfm": "^1.0.2"
+  }
+}

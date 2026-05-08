@@ -1,0 +1,18 @@
+<div class="p-4 bg-white dark:bg-gray-800 text-gray-900 dark:text-gray-100 flex flex-col h-full">
+  <h2 class="text-2xl font-bold mb-4">Export to Obsidian Vault</h2>
+  <div class="mb-4">
+    <label class="flex items-center space-x-2 cursor-pointer">
+      <input type="checkbox" id="export-whole-world" class="form-checkbox h-5 w-5 text-blue-600 rounded" checked>
+      <span class="text-lg">Export Entire World</span>
+    </label>
+  </div>
+  <div id="selection-tree-container" class="hidden flex-1 overflow-y-auto border border-gray-300 dark:border-gray-700 p-2 rounded mb-4">
+    <p class="text-sm mb-2 text-gray-600 dark:text-gray-400">Select the documents or folders you want to export:</p>
+    <div id="selection-tree"></div>
+  </div>
+  <div class="mt-auto pt-4 border-t border-gray-300 dark:border-gray-700 flex justify-end">
+    <button id="btn-export" class="bg-blue-600 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded focus:outline-none focus:shadow-outline flex items-center">
+      <i class="fas fa-file-export mr-2"></i> Export Now
+    </button>
+  </div>
+</div>
