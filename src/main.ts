@@ -28,7 +28,7 @@ Hooks.on('renderJournalDirectory', (app: any, htmlOrElement: any) => {
 
     const btnHtml = `
         <button id="mag-obsidian-export-btn" type="button" class="mt-2 w-full" data-action="mag-obsidian-export">
-            <i class="fas fa-book"></i> Export to Obsidian
+            <i class="fas fa-book"></i> Sync with Obsidian
         </button>
     `;
 

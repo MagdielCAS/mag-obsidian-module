@@ -1,0 +1,53 @@
+<div class="p-4 bg-white dark:bg-gray-800 text-gray-900 dark:text-gray-100 flex flex-col h-full">
+  <h2 class="text-2xl font-bold mb-4">Review Changes</h2>
+
+  <div class="flex flex-1 overflow-hidden border border-gray-300 dark:border-gray-700 rounded mb-4">
+    <!-- Sidebar: File List -->
+    <div class="w-1/4 border-r border-gray-300 dark:border-gray-700 bg-gray-50 dark:bg-gray-900 overflow-y-auto">
+      <ul id="file-list" class="divide-y divide-gray-300 dark:divide-gray-700">
+        {{#each changes}}
+          <li class="p-3 cursor-pointer hover:bg-gray-200 dark:hover:bg-gray-700 file-item" data-index="{{@index}}">
+            <div class="flex items-center justify-between">
+              <span class="font-medium truncate" title="{{this.path}}">{{this.filename}}</span>
+              {{#if (eq this.status "new")}}
+                <span class="px-2 py-1 text-xs font-semibold text-green-800 bg-green-100 rounded-full">New</span>
+              {{else}}
+                <span class="px-2 py-1 text-xs font-semibold text-yellow-800 bg-yellow-100 rounded-full">Modified</span>
+              {{/if}}
+            </div>
+            <p class="text-xs text-gray-500 mt-1 truncate">{{this.path}}</p>
+          </li>
+        {{/each}}
+      </ul>
+    </div>
+
+    <!-- Main Content: Diff Viewer -->
+    <div class="w-3/4 flex flex-col bg-white dark:bg-gray-800">
+      <div class="p-2 border-b border-gray-300 dark:border-gray-700 bg-gray-100 dark:bg-gray-800 flex justify-between items-center">
+        <h3 id="current-file-name" class="font-mono text-sm">Select a file to review</h3>
+      </div>
+
+      <div id="diff-container" class="flex-1 flex overflow-hidden">
+        <!-- Left Side: Original (Foundry) -->
+        <div class="w-1/2 flex flex-col border-r border-gray-300 dark:border-gray-700">
+            <div class="bg-red-50 dark:bg-red-900/20 text-red-800 dark:text-red-200 p-1 text-xs text-center border-b border-gray-300 dark:border-gray-700">Current (Foundry)</div>
+            <div id="original-content" class="flex-1 overflow-y-auto p-4 font-mono text-sm whitespace-pre-wrap bg-gray-50 dark:bg-gray-900 text-gray-600 dark:text-gray-400"></div>
+        </div>
+        <!-- Right Side: Incoming (Obsidian) / Editable -->
+        <div class="w-1/2 flex flex-col">
+             <div class="bg-green-50 dark:bg-green-900/20 text-green-800 dark:text-green-200 p-1 text-xs text-center border-b border-gray-300 dark:border-gray-700">Incoming (Obsidian) - Editable</div>
+             <textarea id="incoming-content" class="flex-1 w-full p-4 font-mono text-sm resize-none focus:outline-none focus:ring-2 focus:ring-blue-500 bg-white dark:bg-gray-800 text-gray-900 dark:text-gray-100"></textarea>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <div class="mt-auto pt-4 border-t border-gray-300 dark:border-gray-700 flex justify-end space-x-2">
+    <button id="btn-cancel" class="bg-gray-500 hover:bg-gray-600 text-white font-bold py-2 px-4 rounded">
+      Cancel
+    </button>
+    <button id="btn-apply" class="bg-green-600 hover:bg-green-700 text-white font-bold py-2 px-4 rounded flex items-center">
+      <i class="fas fa-check mr-2"></i> Apply Changes
+    </button>
+  </div>
+</div>
