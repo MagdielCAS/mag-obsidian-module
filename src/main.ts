@@ -5,21 +5,46 @@ Hooks.once('init', () => {
     console.log('Mag Obsidian Exporter | Initializing module');
 });
 
-Hooks.on('renderSettings', (app: any, html: any) => {
+let exporterInstance: ExporterApp | null = null;
+
+Hooks.on('renderJournalDirectory', (app: any, htmlOrElement: any) => {
+    // Accommodate Foundry V14 App V2 HTML structure (HTMLElement instead of JQuery)
+    const html = htmlOrElement instanceof HTMLElement ? htmlOrElement : htmlOrElement[0];
+
+    // Find the directory footer
+    let footer = html.querySelector('.directory-footer');
+    if (!footer) {
+        footer = document.createElement('footer');
+        footer.className = 'directory-footer action-buttons flexrow';
+        html.appendChild(footer);
+    }
+
+    // Create the export button container
+    const btnContainer = document.createElement('div');
+    btnContainer.className = 'header-actions action-buttons flexrow';
+
     const btnHtml = `
-        <button id="mag-obsidian-export-btn" class="mt-2" data-action="mag-obsidian-export">
+        <button id="mag-obsidian-export-btn" type="button" class="mt-2 w-full" data-action="mag-obsidian-export">
             <i class="fas fa-book"></i> Export to Obsidian
         </button>
     `;
-    const settingsDiv = html.find('#settings-documentation');
-    if (settingsDiv.length) {
-        settingsDiv.append(btnHtml);
-    } else {
-        html.find('#settings-game').append(btnHtml); // Fallback
-    }
 
-    html.find('#mag-obsidian-export-btn').on('click', (e: Event) => {
-        e.preventDefault();
-        new ExporterApp().render(true);
-    });
+    btnContainer.innerHTML = btnHtml;
+
+    const exportBtn = btnContainer.firstElementChild;
+    if (exportBtn) {
+        exportBtn.addEventListener('click', (e) => {
+            e.preventDefault();
+            if (exporterInstance && exporterInstance.rendered) {
+                // Application V1 fallback/method call (using bringToTop to be safe, sometimes it exists in older/newer APIs differently)
+                if (typeof (exporterInstance as any).bringToTop === 'function') {
+                    (exporterInstance as any).bringToTop();
+                }
+                return;
+            }
+            exporterInstance = new ExporterApp();
+            exporterInstance.render(true);
+        });
+        footer.appendChild(btnContainer);
+    }
 });
