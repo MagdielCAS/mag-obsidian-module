@@ -1,0 +1,76 @@
+name: Release Module
+
+on:
+  push:
+    branches: [ main ]
+
+jobs:
+  release:
+    runs-on: ubuntu-latest
+    permissions:
+      contents: write
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+
+      - name: Setup Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: '20'
+          cache: 'npm'
+
+      - name: Check version and bump if necessary
+        id: version-bump
+        run: |
+          VERSION=$(jq -r .version src/module.json)
+          if git ls-remote --tags origin | grep -q "refs/tags/v$VERSION"; then
+            echo "Tag v$VERSION already exists on remote. Bumping patch version."
+            # Bump version in package.json
+            npm version patch --no-git-tag-version
+            NEW_VERSION=$(jq -r .version package.json)
+            # Bump version in src/module.json
+            jq --arg version "$NEW_VERSION" '.version = $version' src/module.json > src/module.tmp.json && mv src/module.tmp.json src/module.json
+
+            # Commit and push
+            git config --local user.email "action@github.com"
+            git config --local user.name "GitHub Action"
+            git add package.json package-lock.json src/module.json
+            git commit -m "chore: bump version to $NEW_VERSION [skip ci]"
+            git push origin HEAD:main
+            echo "version=$NEW_VERSION" >> $GITHUB_OUTPUT
+            echo "bumped=true" >> $GITHUB_OUTPUT
+          else
+            echo "Tag v$VERSION does not exist on remote. No need to bump."
+            echo "version=$VERSION" >> $GITHUB_OUTPUT
+            echo "bumped=false" >> $GITHUB_OUTPUT
+          fi
+
+      - name: Create Git Tag
+        run: |
+          VERSION=${{ steps.version-bump.outputs.version }}
+          git config --local user.email "action@github.com"
+          git config --local user.name "GitHub Action"
+          git tag -a "v$VERSION" -m "Release v$VERSION"
+          git push origin "v$VERSION"
+
+      - name: Install Dependencies
+        run: npm ci --legacy-peer-deps
+
+
+      - name: Build Module
+        run: npm run build
+
+      - name: Package Release
+        run: |
+          cd dist
+          zip -r ../mag-obsidian-module.zip *
+
+      - name: Create GitHub Release
+        uses: softprops/action-gh-release@v2
+        with:
+          tag_name: v${{ steps.version-bump.outputs.version }}
+          name: Release v${{ steps.version-bump.outputs.version }}
+          files: |
+            mag-obsidian-module.zip
+            dist/module.json
