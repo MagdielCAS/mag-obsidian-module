@@ -11,6 +11,9 @@ Hooks.on('renderJournalDirectory', (app: any, htmlOrElement: any) => {
     // Accommodate Foundry V14 App V2 HTML structure (HTMLElement instead of JQuery)
     const html = htmlOrElement instanceof HTMLElement ? htmlOrElement : htmlOrElement[0];
 
+    // Prevent duplicate injection on re-renders
+    if (html.querySelector('#mag-obsidian-export-btn')) return;
+
     // Find the directory footer
     let footer = html.querySelector('.directory-footer');
     if (!footer) {
