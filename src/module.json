@@ -2,7 +2,7 @@
   "id": "mag-obsidian-module",
   "title": "Mag's Obsidian Exporter",
   "description": "Export Foundry VTT worlds to Obsidian Vaults.",
-  "version": "1.0.2",
+  "version": "1.0.3",
   "manifestPlusVersion": "1.2.0",
   "compatibility": {
     "minimum": "14",
